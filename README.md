@@ -42,8 +42,8 @@ gh run watch -R lmjogback/ssh-agent-switcher
 ## Branches
 
 - `release-builds` (default): this README and the build workflow only.
-- `main`: an unmodified mirror of upstream `main`, kept in sync with
-  "Sync fork".
+- main: upstream main as of when the fork was created. It is not used by the 
+  build, which always checks out upstream directly, and may be out of date.
 
 ## License
 

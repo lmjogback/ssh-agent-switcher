@@ -14,6 +14,10 @@ permissions:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    env:
+      # Upstream's rust-toolchain.toml would otherwise switch cargo to a
+      # toolchain that lacks the cross-compile targets installed below.
+      RUSTUP_TOOLCHAIN: stable
     strategy:
       matrix:
         include:
@@ -35,7 +39,10 @@ jobs:
         uses: mlugg/setup-zig@v2
       - if: runner.os == 'Linux'
         run: |
-          cargo install --locked cargo-zigbuild
+          # Build cargo-zigbuild for the host explicitly; a runner-level
+          # default build target must not leak into this step.
+          host="$(rustc -vV | sed -n 's/^host: //p')"
+          cargo install --locked cargo-zigbuild --target "$host"
           cargo zigbuild --release --locked --target ${{ matrix.target }}
       - if: runner.os == 'macOS'
         run: cargo build --release --locked --target ${{ matrix.target }}

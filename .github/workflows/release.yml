@@ -14,10 +14,6 @@ permissions:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    env:
-      # Upstream's rust-toolchain.toml would otherwise switch cargo to a
-      # toolchain that lacks the cross-compile targets installed below.
-      RUSTUP_TOOLCHAIN: stable
     strategy:
       matrix:
         include:
@@ -32,17 +28,14 @@ jobs:
         with:
           repository: jmmv/ssh-agent-switcher
           ref: ssh-agent-switcher-${{ inputs.version }}
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.target }}
+      # Use the toolchain pinned by upstream's rust-toolchain.toml, if any,
+      # and add the cross-compile target to it.
+      - run: rustup target add ${{ matrix.target }}
       - if: runner.os == 'Linux'
         uses: mlugg/setup-zig@v2
       - if: runner.os == 'Linux'
         run: |
-          # Build cargo-zigbuild for the host explicitly; a runner-level
-          # default build target must not leak into this step.
-          host="$(rustc -vV | sed -n 's/^host: //p')"
-          cargo install --locked cargo-zigbuild --target "$host"
+          cargo install --locked cargo-zigbuild
           cargo zigbuild --release --locked --target ${{ matrix.target }}
       - if: runner.os == 'macOS'
         run: cargo build --release --locked --target ${{ matrix.target }}

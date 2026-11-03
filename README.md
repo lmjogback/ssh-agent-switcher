@@ -35,7 +35,7 @@ upstream `COPYING` file. A `SHA256SUMS` file is attached to every release.
 Run the workflow manually with the upstream version number:
 
 ```sh
-gh workflow run release.yml -R lmjogback/ssh-agent-switcher -f version=1.0.2
+gh workflow run release.yml -R lmjogback/ssh-agent-switcher -f version=1.0.3
 gh run watch -R lmjogback/ssh-agent-switcher
 ```
 

@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Upstream version to build (e.g. 1.0.2)
+        description: Upstream version to build (e.g. 1.0.3)
         required: true
 
 permissions:
